@@ -1,30 +1,8 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Knockout</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
-    </head>
-    <body>
-        <div class="header">
-            <div class="score" data-bind="text: 'Score: ' + player().score()"></div>
-            <div class="settings">
-                <input type="number" data-bind="value: numberOfBoxes" placeholder="numberOfBoxes"/>
-                <input type="number" data-bind="value: speed" placeholder="speed"/>
-                <input id="autoPlay" type="checkbox" data-bind="checked: autoPlay"/>
-                <label for="autoPlay">AutoPlay</label>
-            </div>
-            <div style="clear:both;"></div>
-        </div>
-        
-        <div class="area">
-            <div class="player" data-bind="style: { top: player().y() + 'px', left: player().x() + 'px', width: player().width() + 'px', height: player().height() + 'px' }"></div>
-
-            <div data-bind="foreach: boxes">
-                <div class="box" data-bind="style: { 'background': color, top: y() + 'px', left: x() + 'px', width: width() + 'px', height: height() + 'px' }"></div>
-            </div>
-        </div>        
-
-        <script type="text/javascript" src="knockoutjs-3.2.0.js"></script>
-        <script type="text/javascript" src="main.js"></script>
-    </body>
+<head>
+</head>
+<body>
+	<a href="knockout.html">Game 1</a>
+</body>
 </html>
