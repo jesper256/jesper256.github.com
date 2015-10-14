@@ -1,0 +1,193 @@
+
+<html>
+    <head>
+        <title>Ball test</title>
+        <style>
+            body{
+                margin:0px;
+                padding:0px;
+            }
+            #canvas {
+	            display: block;	            
+            }
+        </style>
+    </head>
+    <body>
+
+        <canvas id="canvas" onClick="click()"></canvas>
+
+        <script>
+            
+            var canvas = document.getElementById("canvas"),
+                    ctx = canvas.getContext("2d");
+
+            var W = window.innerWidth,
+                    H = window.innerHeight;
+
+            canvas.height = H; canvas.width = W;
+
+            var ball = {}, cars = [],
+                    gravity = 0.2,
+                    bounceFactor = 0.7;
+                        
+            ball = {
+                x: W / 2,
+                y: 50,
+                width: 15,
+                height: 15,
+                radius: 15,
+                color: "red",
+                lifes: 3,
+                vx: 0,
+                vy: 1,
+                temporaryImmortal: false,
+                draw: function () {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+
+                    if (this.temporaryImmortal) {
+                        ctx.fillStyle = "blue";
+                    }
+                    else {
+                        ctx.fillStyle = this.color;
+                    }
+                    
+                    ctx.fill();
+                    ctx.closePath();
+                },
+
+                onGround: function () {
+                    return this.y >= H - 15;
+                },
+                reset: function () {
+                    this.y = 50;
+                    this.lifes = 3;
+                }                
+            };
+
+            var Car = function(){
+                this.width =  50,
+                this.height =  10,
+                this.x =  W - 50,
+                this.y =  H - 10,
+                this.color =  "green",
+                this.vx =  10,
+                this.vy =  0,
+
+                this.draw =  function () {
+                    ctx.beginPath();
+                    ctx.rect(this.x, this.y, this.width, this.height);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.closePath();
+                },
+
+                this.outOfView = function () {
+                    if (this.x < -100) {
+                        console.log("car outOfView");
+                        return true;
+                    }
+                    return false;
+                },
+                this.reset = function () {
+
+                }
+            };
+
+            cars.push(new Car());
+            var policeCar = new Car();
+            policeCar.vx = 15;
+            policeCar.color = "brown";
+            cars.push(policeCar);
+            
+            canvas.onclick = function (e) {
+                ball.vy = -5;
+            };
+
+            window.onkeydown = function (e) {
+                if (e.keyCode === 38) {
+                    ball.vy = -5;
+                }
+            };
+
+
+            var collision = function (object1, object2) {
+                if (object1.x < object2.x + object2.width && object1.x + object1.width > object2.x && object1.y < object2.y + object2.height && object1.height + object1.y > object2.y) {
+                    return true;
+                }
+                return false;
+            };
+            
+            var clearCanvas = function() {
+                ctx.clearRect(0, 0, W, H);
+            }
+
+            var setLifes = function () {
+                ctx.beginPath();
+                ctx.font = "20px Arial";
+                ctx.fillStyle = "black";
+                ctx.fillText("Lifes: " + ball.lifes + " ball.temporaryImmortal: " + ball.temporaryImmortal, 50, 50);
+                ctx.closePath();
+            }
+            
+            var resetGame = function () {
+                ball.reset();
+                car.reset();
+            }
+
+            function update() {
+                
+                ball.y += ball.vy;
+                ball.vy += gravity;
+
+                if (ball.onGround()) {
+                    ball.y = H - ball.height;
+                }
+
+                cars.forEach(function (car, i, a) {
+                    car.x -= car.vx;
+
+                    if (car.outOfView()) {
+                        car.x = W;
+                    }
+
+                    if (!ball.temporaryImmortal && collision(ball, car)) {
+
+                        ball.lifes--;
+                        ball.temporaryImmortal = true;
+
+                        setTimeout(function () {
+                            ball.temporaryImmortal = false;
+                        }, 5000);
+
+                        if (ball.lifes === 0) {
+                            alert("Game over");
+                            resetGame();
+                        }
+                    }
+                });
+
+                
+                
+                                
+                clearCanvas();
+
+                cars.forEach(function (car, i, a) {
+                    //console.log(car);
+                    car.draw();
+                });
+                
+                ball.draw();
+                setLifes();
+
+            }
+                        
+            
+            setInterval(update, 1000 / 60);
+
+            
+
+        </script>
+    </body>
+</html>
+

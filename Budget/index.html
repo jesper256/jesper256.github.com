@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Budget</title>
+    <link rel="stylesheet" type="text/css" href="../bootstrap.min.css">
+<style>
+    body {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+	.category{
+		float:left;
+	}
+</style>
+
+</head>
+<body>
+
+	<div id="container">
+	
+		<div>
+			Inkomst: <input type="text" data-bind="value: income" />
+		</div>
+		
+		<div>
+			Utgifter: <span data-bind="text: totalSpendings"></span>
+		</div>
+		
+		<div data-bind="foreach: categorys">
+			<div class="category" data-bind="style: { width: Width }">
+				<div data-bind="text: Name + ' - ' + Id"></div>
+                <div>
+                    <ul data-bind="foreach: Spendings">
+                        <li data-bind="text: Amount, click: Remove"></li>
+                    </ul>
+                </div>
+                <div>
+                    <input type="text" class="input-small" style="margin-bottom:0px;" data-bind="value: Amount"/>
+                    <button class="btn" type="submit" data-bind="click: AddSpending"> + </button>
+                </div>
+				
+			</div>
+		</div>	
+		
+	
+	</div>
+
+	
+	<script type="text/javascript" src="../knockoutjs-3.2.0.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        var budget = Budget();
+
+        var allCategorys = [new Item.Category("Bil"),new Item.Category("Boende"),new Item.Category("Mat"),new Item.Category("Övrigt")];
+        budget.categorys(allCategorys);
+    </script>
+</body>
+</html>
