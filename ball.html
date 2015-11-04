@@ -37,7 +37,7 @@
                 height: 15,
                 radius: 15,
                 color: "red",
-                lifes: 3,
+                lifes: 10,
                 vx: 0,
                 vy: 1,
                 temporaryImmortal: false,
@@ -47,6 +47,9 @@
 
                     if (this.temporaryImmortal) {
                         ctx.fillStyle = "blue";
+                    }
+                    else if (this.onGround()) {
+                        ctx.fillStyle = "grey";
                     }
                     else {
                         ctx.fillStyle = this.color;
@@ -62,7 +65,12 @@
                 reset: function () {
                     this.y = 50;
                     this.lifes = 3;
-                }                
+                },
+                jump: function () {
+                    if(this.onGround()){
+                        this.vy = -5;
+                    }                    
+                }
             };
 
             var Car = function(){
@@ -91,22 +99,24 @@
                 },
                 this.reset = function () {
 
-                }
+                }                
             };
 
-            cars.push(new Car());
-            var policeCar = new Car();
-            policeCar.vx = 15;
-            policeCar.color = "brown";
-            cars.push(policeCar);
+            for (var i = 0; i != 2; i++){
+                var car = new Car();
+                car.vx = Math.floor(Math.random() * 20) + 1;
+                car.color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+                cars.push(car);
+            }
+            
             
             canvas.onclick = function (e) {
-                ball.vy = -5;
+                ball.jump();
             };
 
             window.onkeydown = function (e) {
                 if (e.keyCode === 38) {
-                    ball.vy = -5;
+                    ball.jump();
                 }
             };
 
