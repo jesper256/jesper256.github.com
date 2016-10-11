@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<title>Suduko</title>
+		
+		<style>
+		
+			body{
+				background: lightgrey;
+			}
+		
+			.board{
+				width: 459px;
+				background: #000;
+			}
+		
+			.cell {
+				height: 50px;
+				width: 50px;
+				background: #EEE;
+				float:left;
+				margin-left: 1px;
+				margin-top: 1px;
+				text-align: center;
+				line-height: 50px;
+				font-size: 35px;
+				font-family: arial;
+			}
+			
+			.clear{
+				clear:both;
+			}
+		
+		</style>
+		
+	</head>
+
+	<body id="suduko-wrapper">
+	
+		<div class="board">
+			<!-- ko foreach: cells -->
+			<div class="cell" data-bind="text: $data.number !== 0 ? $data.number : ''"></div>
+			<!-- /ko -->
+			<div class="clear"></div>
+		</div>
+	
+		
+		<script src="knockoutjs-3.2.0.js"></script>
+		<script src="suduko.js"></script></script>
+	</body>
+</html>

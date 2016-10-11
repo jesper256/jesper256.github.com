@@ -1,0 +1,158 @@
+
+<html>
+    <head>
+        <title>GAME test</title>
+        <style>
+            body{
+                margin:0px;
+                padding:0px;
+            }
+            #canvas {
+	            display: block;	            
+            }
+        </style>
+    </head>
+    <body>
+
+        <canvas id="canvas"></canvas>
+
+        <script>
+            
+            var canvas = document.getElementById("canvas"),
+                    ctx = canvas.getContext("2d");
+
+            var W = window.innerWidth,
+                    H = window.innerHeight;
+					
+			var balls = [];
+
+            canvas.height = H; canvas.width = W;
+
+            
+            canvas.onclick = function (e) {
+			
+				var rect = canvas.getBoundingClientRect();
+				var mouseX = e.clientX - rect.left;
+				var mouseY = e.clientY - rect.top;
+				
+				var ball = balls[0];
+				
+				if(collisionMouse(ball, e)){
+					ball.x = (mouseX + (ball.width / 2));
+					ball.y = (mouseY + (ball.height / 2));
+				}				
+                
+            };
+
+            window.onkeydown = function (e) {
+                if (e.keyCode === 38) {
+                    //Space
+                }
+            };
+			
+			var gravity = 0.2;
+			var bounceRate = -0.6;
+
+			var Ball = function(){
+			
+                this.x = W / 2;
+                this.y = 50;
+                this.width = 15;
+                this.height = 15;
+                this.radius = 15;
+                this.color = "red";
+                this.vx = 0;
+                this.vy = 1;
+                this.draw = function () {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.closePath();
+                };
+				this.onGround = function () {
+                    return this.y >= H - 15;
+                };
+				this.bounce = function () {
+                    if(this.onGround()){
+						
+						if(ball.vy > 0.5){
+							//console.log("vy" + (ball.vy));
+							this.vy *= bounceRate;
+						}
+						else
+						{
+							//console.log("vy" + (ball.vy));
+							this.vy = 0;
+						}							
+                    }                    
+                }
+            };
+			
+			
+			for (var i = 0; i != 1; i++){
+                var ball = new Ball();
+                ball.y = Math.floor(Math.random() * H);				
+                ball.x = Math.floor(Math.random() * W);				
+                ball.vy = Math.floor(Math.random() * 100);
+                ball.color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+                balls.push(ball);
+            }
+			
+
+			var collisionMouse = function (object1, e) {
+				var rect = canvas.getBoundingClientRect();
+				var mouseX = e.clientX - rect.left;
+				var mouseY = e.clientY - rect.top;			
+			
+                if (object1.x < mouseX + 1 && object1.x + object1.width > mouseX && object1.y < mouseY + 1 && object1.height + object1.y > mouseY) {
+                    return true;
+                }
+                return false;
+            };
+			
+			
+            var collision = function (object1, object2) {
+                if (object1.x < object2.x + object2.width && object1.x + object1.width > object2.x && object1.y < object2.y + object2.height && object1.height + object1.y > object2.y) {
+                    return true;
+                }
+                return false;
+            };
+            
+            var clearCanvas = function() {
+                ctx.clearRect(0, 0, W, H);
+            }
+
+           
+            var resetGame = function () {
+                
+            }
+
+            function update() {
+   
+                clearCanvas();
+				
+                balls.forEach(function (ball, i, a) {
+                    //console.log(ball);
+					
+					ball.y += ball.vy;
+					ball.vy += gravity;
+					
+					if (ball.onGround()) {
+						ball.y = H - ball.height;
+						ball.bounce();
+					}
+					
+                    ball.draw();
+                });
+				
+            }
+            
+            setInterval(update, 1000 / 60);
+
+            
+
+        </script>
+    </body>
+</html>
+
