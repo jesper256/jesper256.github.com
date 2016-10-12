@@ -1,0 +1,125 @@
+<html>
+	<head>
+		<title>JG Music Maker</title>
+		
+		<style>
+		
+			body{
+				padding: 0px;
+				margin: 0px;
+				background: #2a211c;
+				color: #32a8ed;
+			}
+
+			.clear{
+				clear:both;
+			}
+			
+			.controls{
+				position: fixed;
+				min-height: 800px;
+				width: 200px;
+				background: white;
+				border-right: 2px solid black;
+			}
+			
+			.music-grid{
+				margin-left:205px;
+				float:left;
+				min-height: 800px;
+				height: 800px;
+				width: calc(100% - 205px);
+				overflow-x: scroll;
+				overflow-y: scroll;
+				white-space: nowrap;
+			}
+			
+			.music-grid-inner{
+				width:auto;
+				position:relative;
+			}
+
+			.sound-cell{
+				background-color: White;
+				border-right: 1px solid black;
+				min-height: 20px;
+				display:inline-block;
+				margin-top: -3px;
+				margin-right: -4px;
+				cursor:pointer;
+			}
+			
+			.sound-cell.playing{
+				background-color: blue;
+				color: white;
+			}
+			
+			.sound-cell.active{
+				background-color: #32a8ed;
+			}
+			
+			#PositionMarker{
+				position: absolute;
+				top: 0px;
+				left: 0px;
+				min-height: 800px;
+				width:2px;
+				background-color: #32a8ed;
+			}
+			
+			.noselect {
+			  -webkit-touch-callout: none;
+			  -webkit-user-select: none;
+			  -khtml-user-select: none;
+			  -moz-user-select: none;
+			  -ms-user-select: none; 
+			  user-select: none; 
+			}
+			
+			.button{
+				cursor:pointer;
+				background: #EEE;
+				width: 100px;
+				height: 40px;
+				display:block;
+				text-align:center;
+				line-height: 40px;
+				text-decoration:none;
+				border: 2px solid #555555;
+				color: #555555;
+				margin:5px;
+			}
+		
+		</style>
+		
+	</head>
+
+	<body id="JGMusicMaker" class="noselect">
+	
+		<div class="controls">
+			<a href="#" data-bind="click: Controls.Play" class="button">Play</a>
+			<a href="#" data-bind="click: Controls.Stop" class="button">Stop</a>
+			<div data-bind="text: $root.Player.CurrentPosition()"></div>
+		</div>
+		
+		<div class="music-grid">
+			<div class="music-grid-inner">
+				<div id="PositionMarker" data-bind="style: { left: Player.CurrentPosition }"></div>
+				<div data-bind="foreach: { data: MusicGrid.Sounds, as: 'Sound' }">
+					<div data-bind="foreach: Cells">
+						<div class="sound-cell" data-bind="style: { width: Sound.Width() - 1 }, 
+						css: { playing: IsPlaying, active: Active },
+						click: function(){ this.Active(!this.Active()); if(this.Active())Sound.Play(); }"></div>						
+						
+					</div>					
+				</div>
+				<div data-bind="visible: MusicGrid.Loading">LOADING SOUNDS...</div>
+			</div>		
+		</div>
+		
+		<div class="clear"></div>
+			
+		<script src="knockoutjs-3.2.0.js"></script>
+		<script src="JGMusicMaker.js"></script></script>
+	</body>
+</html>
