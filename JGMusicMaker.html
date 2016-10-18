@@ -99,27 +99,21 @@
 		<div class="controls">
 			<a href="#" data-bind="click: Controls.Play" class="button">Play</a>
 			<a href="#" data-bind="click: Controls.Stop" class="button">Stop</a>
+			<a href="#" data-bind="click: Controls.Reset" class="button">Reset</a>
 			<div data-bind="text: $root.Player.CurrentPosition()"></div>
 		</div>
 		
 		<div class="music-grid">
 			<div class="music-grid-inner">
-				<div id="PositionMarker" data-bind="style: { left: Player.CurrentPosition }"></div>
-				<div data-bind="foreach: { data: MusicGrid.Sounds, as: 'Sound' }">
-					<div data-bind="foreach: Cells">
-						<div class="sound-cell" data-bind="style: { width: Sound.Width() - 1 }, 
-						css: { playing: IsPlaying, active: Active },
-						click: function(){ this.Active(!this.Active()); if(this.Active())Sound.Play(); }"></div>						
-						
-					</div>					
-				</div>
-				<div data-bind="visible: MusicGrid.Loading">LOADING SOUNDS...</div>
+				<div id="PositionMarker" data-bind="style: { left: Player.CurrentPosition, minHeight: MusicGrid.CanvasHeight }"></div>				
+				<canvas id="music-grid-canvas" data-bind="attr: { width: MusicGrid.CanvasWidth, height: MusicGrid.CanvasHeight }" ></canvas>
 			</div>		
 		</div>
 		
 		<div class="clear"></div>
 			
 		<script src="knockoutjs-3.2.0.js"></script>
+		<script src="jquery-3.1.1.min.js"></script>
 		<script src="JGMusicMaker.js"></script></script>
 	</body>
 </html>
