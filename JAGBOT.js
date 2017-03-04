@@ -1,3 +1,4 @@
+
 var JAGBOT = function(){
 	var pub = { Events: [], EventTimeOuts: [], IsRecording: false };	
 	var priv = {};
@@ -8,19 +9,18 @@ var JAGBOT = function(){
 			Keyboard: 1,
 			Mouse: 2
 		}
-	};
-	
+	};	
+
 	var Models = {				
-		Event: function(){
-			return {
-				EventType: Constants.EventTypes.None,
-				Time: 0,
-				OriginalEvent: undefined
-			}
-		}			
+		Event: function() {
+			var self = this;
+			self.EventType = Constants.EventTypes.None;
+			self.Time = 0;
+			self.OriginalEvent = undefined;			
+		},	
 	};	
 		
-	priv.TriggerMouseEvent = function(mouseEvent){
+	priv.TriggerEvent = function(mouseEvent){
 		
 		var eventToTrigger = new MouseEvent(mouseEvent.type, {
 			screenX: mouseEvent.pageX, 
@@ -28,7 +28,12 @@ var JAGBOT = function(){
 		});
 		
 		var elementToClickOn = document.elementFromPoint(mouseEvent.pageX - window.pageXOffset, mouseEvent.pageY - window.pageYOffset);
-		elementToClickOn.dispatchEvent(eventToTrigger);
+		
+		if(elementToClickOn.type && elementToClickOn.type === "text"){
+			elementToClickOn.focus();
+		}else{
+			elementToClickOn.dispatchEvent(eventToTrigger);
+		}		
 	};
 	
 	priv.updateEventsList = function(){
@@ -44,7 +49,7 @@ var JAGBOT = function(){
 		}		
 	};
 	
-	priv.mouseEvent = function(ev)
+	priv.addEvent = function(ev)
 	{
 		if(!pub.IsRecording){
 			return;
@@ -53,7 +58,14 @@ var JAGBOT = function(){
 		var newEvent = new Models.Event();			
 		newEvent.Time = new Date().getTime();
 		newEvent.OriginalEvent = ev;
-		newEvent.EventType = Constants.EventTypes.Mouse;			
+
+		if(ev instanceof(MouseEvent)){
+			newEvent.EventType = Constants.EventTypes.Mouse;	
+		}
+		else if (ev instanceof(KeyboardEvent)){
+			newEvent.EventType = Constants.EventTypes.Keyboard;	
+		}
+				
 		pub.Events.push(newEvent);
 		priv.updateEventsList();			
 	};
@@ -66,9 +78,10 @@ var JAGBOT = function(){
 		
 		console.log("Recording...");
 				
-		document.onmousedown = priv.mouseEvent;			
-		document.onmouseup = priv.mouseEvent;		
-		document.onclick = priv.mouseEvent;		
+		//document.onmousedown = priv.addEvent;			
+		//document.onmouseup = priv.addEvent;		
+		document.onclick = priv.addEvent;
+		document.onkeypress = priv.addEvent;		
 		
 		setTimeout(function(){
 			pub.IsRecording = true;	
@@ -112,7 +125,7 @@ var JAGBOT = function(){
 			var timeout = setTimeout(function(){				
 				var eventEl = document.getElementById("JAGBOT_EVENT_" + this.OriginalEvent.type + "_" + this.Time);
 				eventEl.style = "background:lightblue;font-size: 14px;border-bottom: 1px solid grey;";				
-				priv.TriggerMouseEvent(this.OriginalEvent);
+				priv.TriggerEvent(this.OriginalEvent);
 			}.bind(pub.Events[i]), totalTime);
 			
 			pub.EventTimeOuts.push(timeout);
@@ -154,8 +167,7 @@ var JAGBOT = function(){
 	resetButton.innerHTML = "Reset";
 	resetButton.onclick  = priv.Reset;
 	container.appendChild(resetButton);	
-	
-	
+			
 	var events = document.createElement("div");
 	events.id = "JAGBOT_EVENTS";
 	container.appendChild(events);	
