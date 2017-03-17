@@ -1,4 +1,3 @@
-
 var JAGBOT = function(){
 	var pub = { Events: [], EventTimeOuts: [], IsRecording: false };	
 	var priv = {};
@@ -20,22 +19,47 @@ var JAGBOT = function(){
 		},	
 	};	
 		
-	priv.TriggerEvent = function(mouseEvent){
+	priv.TriggerEvent = function(event){
 		
-		var eventToTrigger = new MouseEvent(mouseEvent.type, {
-			screenX: mouseEvent.pageX, 
-			screenY: mouseEvent.pageY
-		});
+		var eventToTrigger = {};
+
+		if (event.EventType === Constants.EventTypes.Mouse) {
+			eventToTrigger = new MouseEvent(event.OriginalEvent.type, {
+				screenX: event.OriginalEvent.pageX, 
+				screenY: event.OriginalEvent.pageY
+			});
+
+			var element = document.elementFromPoint(event.OriginalEvent.pageX - window.pageXOffset, event.OriginalEvent.pageY - window.pageYOffset);
 		
-		var elementToClickOn = document.elementFromPoint(mouseEvent.pageX - window.pageXOffset, mouseEvent.pageY - window.pageYOffset);
-		
-		if(elementToClickOn.type && elementToClickOn.type === "text"){
-			elementToClickOn.focus();
-		}else{
-			elementToClickOn.dispatchEvent(eventToTrigger);
-		}		
+			if(element.type && element.type === "text"){
+				element.focus();
+			} else {
+				element.dispatchEvent(eventToTrigger);
+			}
+
+		} else if(event.EventType === Constants.EventTypes.Keyboard) {
+			
+		    var eventObj = document.createEventObject ? document.createEventObject() : document.createEvent("Events");
+
+		    if (eventObj.initEvent) {
+		        eventObj.initEvent("keydown", true, true);
+		    }
+
+		    eventObj.keyCode = event.OriginalEvent.keyCode;
+		    eventObj.which = event.OriginalEvent.keyCode;
+
+		    var focusedElement = $$(":focus")[0];
+
+		    if (focusedElement) {
+		        focusedElement.dispatchEvent ? focusedElement.dispatchEvent(eventObj) : focusedElement.fireEvent("onkeydown", eventObj);
+            }
+
+		    
+		}	
+				
 	};
-	
+
+	 
 	priv.updateEventsList = function(){
 		var eventDiv = document.getElementById("JAGBOT_EVENTS");
 		eventDiv.innerHTML = "";
@@ -44,7 +68,7 @@ var JAGBOT = function(){
 			var event = document.createElement("p");
 			event.style = "font-size: 14px;border-bottom: 1px solid grey;";
 			event.id = "JAGBOT_EVENT_" + pub.Events[i].OriginalEvent.type + "_" + pub.Events[i].Time;
-			event.innerHTML = pub.Events[i].OriginalEvent.type + " x:" + pub.Events[i].OriginalEvent.x+ " y:" + pub.Events[i].OriginalEvent.y;
+			event.innerHTML = pub.Events[i].OriginalEvent.type + " x:" + pub.Events[i].OriginalEvent.x + " y:" + pub.Events[i].OriginalEvent.y;
 			eventDiv.appendChild(event); 
 		}		
 	};
@@ -122,10 +146,11 @@ var JAGBOT = function(){
 			
 			lastEventTime = pub.Events[i].Time;	
 			
-			var timeout = setTimeout(function(){				
-				var eventEl = document.getElementById("JAGBOT_EVENT_" + this.OriginalEvent.type + "_" + this.Time);
+			var timeout = setTimeout(function(){	
+				var event = this;			
+				var eventEl = document.getElementById("JAGBOT_EVENT_" + event.OriginalEvent.type + "_" + event.Time);
 				eventEl.style = "background:lightblue;font-size: 14px;border-bottom: 1px solid grey;";				
-				priv.TriggerEvent(this.OriginalEvent);
+				priv.TriggerEvent(event);
 			}.bind(pub.Events[i]), totalTime);
 			
 			pub.EventTimeOuts.push(timeout);
