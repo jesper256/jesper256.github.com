@@ -31,8 +31,7 @@ body {
 
 .player {
     position: absolute;
-    /*background: #0094ff;*/
-    background: url('http://www.scientix.eu/scientix-2-theme/images/emoticons/pac_man.gif');
+    background: #0094ff;
 }
 
 .header{
