@@ -1,0 +1,35 @@
+<html>
+	<head>
+		<title>Vue</title>
+		
+		<style>
+		
+			body{
+				background: lightgrey;
+			}
+		
+		</style>
+		
+	</head>
+
+	<body>
+	
+		
+		<div id="app">
+			<span v-bind:title="message" >
+				Hover your mouse over me for a few seconds
+				to see my dynamically bound title!
+			  </span>
+
+			  <li v-for="cat in cats">
+				{{ cat.name }} <span @click="removeCat(cat)">(x)</span>
+			  </li>
+
+			  <button @click="addCat">Add cat</button>
+			  <input type="text" v-model="catNamePrefix" />
+		</div>
+		
+		<script src="../vue.js"></script>
+		<script src="main.js"></script></script>
+	</body>
+</html>
