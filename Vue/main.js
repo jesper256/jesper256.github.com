@@ -11,7 +11,7 @@ var app = new Vue({
     },
     methods: {
         addCat: function () {
-            this.cats.push({ name: this.catNamePrefix + 'cat #' + this.cats.length, id: this.cats.length, prefix: this.catNamePrefix });
+            this.cats.push({ name: 'cat #' + this.cats.length, id: this.cats.length, prefix: this.catNamePrefix });
         },
         removeCat: function (cat) {
             this.cats = this.cats.filter(function (c) { return c.id !== cat.id });

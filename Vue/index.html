@@ -22,7 +22,7 @@
 			  </span>
 
 			  <li v-for="cat in cats">
-				{{ cat.name }} <span @click="removeCat(cat)">(x)</span>
+				{{ catNamePrefix }}{{ cat.name }} <span @click="removeCat(cat)">(x)</span>
 			  </li>
 
 			  <button @click="addCat">Add cat</button>
