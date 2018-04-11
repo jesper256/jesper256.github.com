@@ -1,7 +1,7 @@
 <html>
 
 <head>
-	<title>Vue</title>
+	<title>Vue one million cats</title>
 
 	<style>
 		body {
@@ -15,13 +15,16 @@
 
 
 	<div id="app">
-		<span v-bind:title="message">
-			Hover mee for cats
+		<span v-bind:title="message" @mouseover="addCat">
+			Hover mee for more cats
 		</span>
 		<ul v-if="showCats">
 			<li v-for="cat in cats">
 				{{ catNamePrefix }}{{ cat.name }}
 				<span @click="removeCat(cat)">(x)</span>
+				<span>{{cat.id}}</span>
+				<cat-component :data="cat"></cat-component>
+
 			</li>
 		</ul>
 
@@ -31,7 +34,7 @@
 		<input type="text" v-model="catNamePrefix" />
 
 
-		<button-counter></button-counter>
+		
 
 	</div>
 

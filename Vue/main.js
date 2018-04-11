@@ -1,13 +1,18 @@
 
-Vue.component('button-counter', {
-    data: function () {
-      return {
-        likes: 0,
-        dislikes: 0,
-      }
-    },
-    template: '<div><button v-on:click="likes++">Likes {{ likes }} </button><button v-on:click="dislikes++">Dislikes {{ dislikes }} </button></div>'
-  });
+Vue.component('cat-component', {
+    props: {
+        data: {
+            type: Object
+        }
+    },    
+    data: function(){ return { catImage: "" } },
+    template: '<div><img :src="catImage"><button @click="removeCat(cat)">remove cat</button></div>',
+    methods: {
+        removeCat: function () {
+            this.$parent.removeCat(this.data);
+        }
+    }
+});
 
 var app = new Vue({
     el: '#app',
