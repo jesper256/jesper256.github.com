@@ -1,0 +1,14 @@
+{
+	// See http://go.microsoft.com/fwlink/?LinkId=827846
+	// for the documentation about the extensions.json format
+	"recommendations": [
+		"octref.vetur",
+    	"EditorConfig.editorconfig",
+    	"ms-vscode.csharp",
+    	"dbaeumer.vscode-eslint",
+    	"esbenp.prettier-vscode",
+    	"rebornix.project-snippets",
+    	"shinnn.stylelint",
+    	"mrmlnc.vscode-scss"		
+	]
+}
